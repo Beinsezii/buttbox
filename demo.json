@@ -1,0 +1,11 @@
+{
+  "wrap": 3,
+  "commands": [
+    ["Cancel", "echo", []],
+    ["Squawk 'hello'", "echo", ["hello"]],
+    ["Date", "date", []],
+    ["List", "ls", []],
+    ["List Above", "ls", [".."]],
+    ["List Long", "ls", ["-a", "-l", "."]]
+  ]
+}
