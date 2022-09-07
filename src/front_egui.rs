@@ -57,13 +57,13 @@ impl ButtBox {
     fn right(&mut self) {
         self.sel = (self.sel + 1)
             .min(self.butts.commands.len() - 1)
-            .min((self.sel / self.butts.wrap + 1) * self.butts.wrap - 1)
+            .min((self.sel.checked_div(self.butts.wrap).unwrap_or(0) + 1) * self.butts.wrap - 1)
     }
     fn left(&mut self) {
         self.sel = self
             .sel
             .saturating_sub(1)
-            .max(self.sel / self.butts.wrap * (self.butts.wrap))
+            .max(self.sel.checked_div(self.butts.wrap).unwrap_or(0) * (self.butts.wrap))
     }
     fn down(&mut self) {
         let n = self.sel + self.butts.wrap;
