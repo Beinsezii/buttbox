@@ -1,4 +1,6 @@
 {
+  "butt_width": 100.0,
+  "butt_height": 50.0,
   "wrap": 3,
   "commands": [
     ["Cancel", "echo", []],

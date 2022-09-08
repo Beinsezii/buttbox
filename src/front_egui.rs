@@ -1,6 +1,6 @@
 use super::ButtSets;
 use eframe::{
-    egui::{self, CentralPanel, Context, Grid, Key},
+    egui::{self, Button, CentralPanel, Color32, Context, Grid, Key, Stroke},
     App, Frame,
 };
 
@@ -11,22 +11,28 @@ pub struct ButtBox {
 
 impl App for ButtBox {
     fn update(&mut self, ctx: &Context, frame: &mut Frame) {
-        CentralPanel::default().show(ctx, |ui| {
-            Grid::new("Butts").show(ui, |ui| {
+        CentralPanel::default()
+            .frame(
+                egui::containers::Frame::window(&ctx.style())
+                    .inner_margin(0.0)
+                    .outer_margin(0.0),
+            )
+            .show(ctx, |ui| {
+            Grid::new("Butts").spacing((1.0, 1.0)).show(ui, |ui| {
                 let mut run = None;
                 for (n, b) in self.butts.commands.iter().enumerate() {
                     if self.butts.wrap == 0 {
                     } else if n % self.butts.wrap == 0 && n != 0 {
                         ui.end_row()
                     }
-                    if ui
-                        .button(if n == self.sel {
-                            String::from(">") + &b.0
-                        } else {
-                            b.0.clone()
-                        })
-                        .clicked()
-                    {
+                    let mut butt = Button::new(&b.0);
+                    if n == self.sel {
+                        butt = butt.stroke(Stroke {
+                            width: 1.0,
+                            color: Color32::WHITE,
+                        });
+                    }
+                    if ui.add_sized((self.butts.butt_width, self.butts.butt_height), butt).clicked() {
                         run = Some(n)
                     };
                 }
