@@ -1,4 +1,6 @@
 {
+  "fg": "#D0C798",
+  "bg": "#000000",
   "butt_width": 100.0,
   "butt_height": 50.0,
   "wrap": 3,

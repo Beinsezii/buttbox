@@ -1,6 +1,10 @@
 use super::ButtSets;
 use eframe::{
-    egui::{self, Button, CentralPanel, Color32, Context, Grid, Key, Stroke},
+    egui::{
+        self,
+        style::{WidgetVisuals, Widgets},
+        Button, CentralPanel, Color32, Context, Grid, Key, Stroke, Style, Visuals,
+    },
     App, Frame,
 };
 
@@ -18,29 +22,33 @@ impl App for ButtBox {
                     .outer_margin(0.0),
             )
             .show(ctx, |ui| {
-            Grid::new("Butts").spacing((1.0, 1.0)).show(ui, |ui| {
-                let mut run = None;
-                for (n, b) in self.butts.commands.iter().enumerate() {
-                    if self.butts.wrap == 0 {
-                    } else if n % self.butts.wrap == 0 && n != 0 {
-                        ui.end_row()
+                Grid::new("Butts").spacing((1.0, 1.0)).show(ui, |ui| {
+                    let mut run = None;
+
+                    for (n, b) in self.butts.commands.iter().enumerate() {
+                        if self.butts.wrap == 0 {
+                        } else if n % self.butts.wrap == 0 && n != 0 {
+                            ui.end_row()
+                        }
+
+                        let res = ui.add_sized(
+                            (self.butts.butt_width, self.butts.butt_height),
+                            Button::new(&b.0),
+                        );
+
+                        if n == self.sel {
+                            ui.memory().request_focus(res.id)
+                        }
+
+                        if res.clicked() {
+                            run = Some(n)
+                        };
                     }
-                    let mut butt = Button::new(&b.0);
-                    if n == self.sel {
-                        butt = butt.stroke(Stroke {
-                            width: 1.0,
-                            color: Color32::WHITE,
-                        });
+                    if let Some(n) = run {
+                        self.run(n, frame)
                     }
-                    if ui.add_sized((self.butts.butt_width, self.butts.butt_height), butt).clicked() {
-                        run = Some(n)
-                    };
-                }
-                if let Some(n) = run {
-                    self.run(n, frame)
-                }
+                });
             });
-        });
         if ctx.input().key_pressed(Key::ArrowRight) {
             self.right()
         } else if ctx.input().key_pressed(Key::ArrowLeft) {
@@ -49,14 +57,30 @@ impl App for ButtBox {
             self.down()
         } else if ctx.input().key_pressed(Key::ArrowUp) {
             self.up()
-        } else if ctx.input().key_pressed(Key::Enter) {
-            self.run(self.sel, frame)
         }
     }
 }
 
 impl ButtBox {
     pub fn new(cc: &eframe::CreationContext<'_>, butts: ButtSets) -> Self {
+
+        if let Some(bg) = &butts.bg {
+            let style = cc.egui_ctx.style().as_ref().clone();
+            cc.egui_ctx.set_style(Style {
+                visuals: Visuals {
+                    widgets: Widgets {
+                        active: WidgetVisuals {
+                            bg_fill: Color32::BLACK,
+                            ..style.visuals.widgets.active
+                        },
+                        ..style.visuals.widgets
+                    },
+                    ..style.visuals
+                },
+                ..style
+            });
+        }
+
         Self { butts, sel: 0 }
     }
 
