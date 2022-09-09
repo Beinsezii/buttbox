@@ -225,7 +225,7 @@ dependencies = [
 [[package]]
 name = "colcon"
 version = "0.1.0"
-source = "git+https://github.com/beinsezii/colcon.git#1cc40fe89d94e98fc6871b8288bb48e817106bac"
+source = "git+https://github.com/beinsezii/colcon.git?tag=0.1.0#6234952752d7e8c516670f5236e76f7e46035fe0"
 
 [[package]]
 name = "combine"
