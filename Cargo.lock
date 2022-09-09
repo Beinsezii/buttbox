@@ -99,6 +99,7 @@ checksum = "c1ad822118d20d2c234f427000d5acc36eabe1e29a348c89b63dd60b13f28e5d"
 name = "buttbox"
 version = "0.1.0"
 dependencies = [
+ "colcon",
  "eframe",
  "serde",
  "serde_json",
@@ -220,6 +221,11 @@ dependencies = [
  "libc",
  "objc",
 ]
+
+[[package]]
+name = "colcon"
+version = "0.1.0"
+source = "git+https://github.com/beinsezii/colcon.git#1cc40fe89d94e98fc6871b8288bb48e817106bac"
 
 [[package]]
 name = "combine"

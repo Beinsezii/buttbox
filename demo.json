@@ -1,8 +1,8 @@
 {
-  "fg": "#D0C798",
+  "fg": "#D3A350",
   "bg": "#000000",
   "butt_width": 100.0,
-  "butt_height": 50.0,
+  "butt_height": 75.0,
   "wrap": 3,
   "commands": [
     ["Cancel", "echo", []],
