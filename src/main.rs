@@ -8,8 +8,8 @@ pub struct ButtSets {
     pub bg: Option<String>,
     pub commands: Vec<(String, Command)>,
     pub wrap: usize,
-    butt_width: f32,
-    butt_height: f32,
+    pub butt_width: f32,
+    pub butt_height: f32,
 }
 
 #[derive(Serialize, Deserialize)]
