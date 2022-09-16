@@ -1,19 +1,19 @@
-# ButtBox 0.0.0
+# ButtBox 0.1.0
 Easily create a box of buttons to do things!
 
 ## Features
   * Make buttons that do things
-    * Configure with [JSON](./demo.json)
+    * Configure with [TOML](./demo.toml)
   * Pure Rust, very portable.
 
 ## WIP/Why this isn't 1.0 yet
   * Themes / UI overhaul
   * Read from STDIN
-  * Investigte CLI as opposed to reading JSON
+  * Investigte CLI as opposed to reading TOML
   * ???
   
 ## Usage
-See the [example JSON](./demo.json)
+See the [example TOML](./demo.toml)
 
 ### Compiling
 Have Rust 2021 installed, clone repo and just run `cargo build`.
