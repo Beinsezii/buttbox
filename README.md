@@ -15,6 +15,8 @@ Easily create a box of buttons to do things!
 ## Usage
 See the [example TOML](./demo.toml)
 
+<img src="./demo.png"/>
+
 ### Compiling
 Have Rust 2021 installed, clone repo and just run `cargo build`.
 `build_bin.sh` will build in binaries in release mode for linux/windows, moving the binaries to ./bin/
