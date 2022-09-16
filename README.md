@@ -7,7 +7,6 @@ Easily create a box of buttons to do things!
   * Pure Rust, very portable.
 
 ## WIP/Why this isn't 1.0 yet
-  * Themes / UI overhaul
   * Read from STDIN
   * Investigte CLI as opposed to reading TOML
   * ???
