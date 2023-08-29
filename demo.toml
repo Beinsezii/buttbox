@@ -1,13 +1,18 @@
-fg = "#D3A350"
-bg = "#000000"
-butt_width = 100.0
-butt_height = 75.0
-wrap = 3
-commands = [
-    ["Cancel", "echo", []],
-    ["Squawk 'hello'", "echo", ["hello"]],
-    ["Date", "date", []],
-    ["List", "ls", []],
-    ["List Above", "ls", [".."]],
-    ["List Long", "ls", ["-a", "-l", "."]]
+# Example file using default values and simple example commands
+
+fg = "#FFFFFF"       # foreground color
+bg = "#000000"       # background color
+opacity = 1.0        # button opacity
+butt_width = 100.0   # button width
+butt_height = 100.0  # button height
+butt_stroke = 2.0    # button stroke
+font_size = 12.0     # font size
+wrap = 0             # how many buttons on each line
+commands = [         # button label, command, args
+    ["Cancel", "", []],
+    ["ls", "ls", []],
+    ["ls -al .", "ls", ["-al", "."]],
+    ["Long labels will wrap", "echo", ["It\nwrapped"]],
+    ["Date", "sh", ["-c", "notify-send \"`date`\""]],
+    ["ButtBox git", "xdg-open", ["https://github.com/Beinsezii/buttbox"]],
 ]

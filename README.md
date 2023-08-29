@@ -1,4 +1,4 @@
-# ButtBox 0.1.0
+# ButtBox 0.2.0
 Easily create a box of buttons to do things!
 
 ## Features
@@ -7,8 +7,8 @@ Easily create a box of buttons to do things!
   * Pure Rust, very portable.
 
 ## WIP/Why this isn't 1.0 yet
-  * Read from STDIN
-  * Investigte CLI as opposed to reading TOML
+  * Pipe the TOML?
+  * Set commands from CLI?
   * ???
   
 ## Usage

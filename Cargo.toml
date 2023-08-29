@@ -1,19 +1,16 @@
 [package]
 name = "buttbox"
-version = "0.1.0"
+version = "0.2.0"
 edition = "2021"
 
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-eframe = "0.19"
-# clap = { version = "3", features = ["derive"] }
+colcon = "0.2"
+clap = { version = "4", features = ["derive"] }
+eframe = { version = "0.22", features = ["wgpu"] }
 serde = { version = "1", features = ["derive"] }
-toml = "0.5"
-
-# mine
-colcon = "0.1.0"
+toml = "0.7"
 
 [profile.release]
-lto = true
 strip = true
