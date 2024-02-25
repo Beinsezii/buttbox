@@ -6,11 +6,11 @@ edition = "2021"
 # See more keys and their definitions at https://doc.rust-lang.org/cargo/reference/manifest.html
 
 [dependencies]
-colcon = "0.2"
+colcon = "0.8"
 clap = { version = "4", features = ["derive"] }
 eframe = { version = "0.22", features = ["wgpu"] }
 serde = { version = "1", features = ["derive"] }
-toml = "0.7"
+toml = "0.8"
 
 [profile.release]
 strip = true

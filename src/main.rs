@@ -1,11 +1,14 @@
 use clap::Parser;
+use colcon::Space;
 use serde::Deserialize;
 use std::{env, path::PathBuf, process::Command};
 
 mod front_egui;
 
-fn hex_parse(s: &str) -> Result<[u8; 3], String> {
-    colcon::hex_to_irgb(s)
+fn col_parse(s: &str) -> Result<[u8; 3], String> {
+    colcon::str2space(s, Space::SRGB)
+        .map(|p| colcon::srgb_to_irgb(p))
+        .ok_or_else(|| format!("Could not parse\n{}\nas a color in a known format", s))
 }
 
 fn scale_factor() -> f32 {
@@ -37,10 +40,10 @@ struct ButtClap {
     /// TOML file to read from
     file: PathBuf,
     /// Override foreground color
-    #[arg(long, value_parser=hex_parse)]
+    #[arg(long, value_parser=col_parse)]
     fg: Option<[u8; 3]>,
     /// Override foreground color
-    #[arg(long, value_parser=hex_parse)]
+    #[arg(long, value_parser=col_parse)]
     bg: Option<[u8; 3]>,
     /// Override opacity
     #[arg(short = 'o', long)]
@@ -49,7 +52,7 @@ struct ButtClap {
     #[arg(short = 'f', long)]
     font_size: Option<f32>,
     /// Override butt wrap
-    #[arg(long, short='W')]
+    #[arg(long, short = 'W')]
     wrap: Option<usize>,
     /// Override butt width
     #[arg(short = 'w', long)]
@@ -61,7 +64,7 @@ struct ButtClap {
     #[arg(short = 's', long)]
     butt_stroke: Option<f32>,
     /// Override environment scaling
-    #[arg(long, short='S')]
+    #[arg(long, short = 'S')]
     scale: Option<f32>,
 }
 
@@ -163,7 +166,7 @@ fn main() {
         centered: true,
         decorated: false,
         resizable: false,
-        transparent: if buttsets.opacity < 1.0 {true} else {false},
+        transparent: if buttsets.opacity < 1.0 { true } else { false },
         initial_window_size: Some(
             (
                 buttsets.wrap.min(buttsets.commands.len()) as f32 * w,
