@@ -2,7 +2,7 @@ use super::ButtSets;
 use eframe::{
     egui::{
         style::{Spacing, WidgetVisuals, Widgets},
-        Button, CentralPanel, Color32, Context, Frame, Grid, Key, RichText, Stroke, Style, Visuals,
+        Button, CentralPanel, Color32, Context, Frame, Grid, Key, RichText, Stroke, Style, ViewportCommand, Visuals,
     },
     epaint::{FontId, Rounding, Shadow},
     App,
@@ -21,61 +21,54 @@ impl App for ButtBox {
             .gamma_multiply(self.butts.opacity)
             .to_normalized_gamma_f32()
     }
-    fn update(&mut self, ctx: &Context, frame: &mut eframe::Frame) {
-        CentralPanel::default()
-            .frame(Frame::window(&ctx.style()))
-            .show(ctx, |ui| {
-                Grid::new("Butts").show(ui, |ui| {
-                    let mut run = None;
-                    let mut rids = Vec::new();
+    fn update(&mut self, ctx: &Context, _frame: &mut eframe::Frame) {
+        CentralPanel::default().frame(Frame::window(&ctx.style())).show(ctx, |ui| {
+            Grid::new("Butts").show(ui, |ui| {
+                let mut run = None;
+                let mut rids = Vec::new();
 
-                    for (n, b) in self.butts.commands.iter().enumerate() {
-                        if self.butts.wrap == 0 {
-                        } else if n % self.butts.wrap == 0 && n != 0 {
-                            ui.end_row()
-                        }
-
-                        let res = ui.add_sized(
-                            (
-                                self.butts.butt_width * self.butts.scale,
-                                self.butts.butt_height * self.butts.scale,
-                            ),
-                            Button::new(RichText::from(&b.0).font(FontId::proportional(
-                                self.butts.font_size * self.butts.scale,
-                            ))),
-                        );
-
-                        // override sel if focus changed
-                        ui.memory(|u| {
-                            if u.has_focus(res.id) {
-                                if self.psel != n {
-                                    self.sel = n
-                                }
-                            }
-                        });
-
-                        if res.clicked() {
-                            run = Some(n)
-                        };
-
-                        rids.push(res);
+                for (n, b) in self.butts.commands.iter().enumerate() {
+                    if self.butts.wrap == 0 {
+                    } else if n % self.butts.wrap == 0 && n != 0 {
+                        ui.end_row()
                     }
 
-                    rids.into_iter().enumerate().for_each(|(n, r)| {
-                        ui.memory_mut(|m| {
-                            if n == self.sel {
-                                m.request_focus(r.id)
+                    let res = ui.add_sized(
+                        (self.butts.butt_width * self.butts.scale, self.butts.butt_height * self.butts.scale),
+                        Button::new(RichText::from(&b.0).font(FontId::proportional(self.butts.font_size * self.butts.scale))),
+                    );
+
+                    // override sel if focus changed
+                    ui.memory(|u| {
+                        if u.has_focus(res.id) {
+                            if self.psel != n {
+                                self.sel = n
                             }
-                        })
+                        }
                     });
 
-                    self.psel = self.sel;
+                    if res.clicked() {
+                        run = Some(n)
+                    };
 
-                    if let Some(n) = run {
-                        self.run(n, frame)
-                    }
+                    rids.push(res);
+                }
+
+                rids.into_iter().enumerate().for_each(|(n, r)| {
+                    ui.memory_mut(|m| {
+                        if n == self.sel {
+                            m.request_focus(r.id)
+                        }
+                    })
                 });
+
+                self.psel = self.sel;
+
+                if let Some(n) = run {
+                    self.run(n, ctx)
+                }
             });
+        });
 
         ctx.input(|i| {
             if i.key_pressed(Key::ArrowRight) {
@@ -94,7 +87,7 @@ impl App for ButtBox {
 impl ButtBox {
     // {{{
     pub fn new(cc: &eframe::CreationContext<'_>, butts: ButtSets) -> Self {
-        let rounding = Rounding::none();
+        let rounding = Rounding::ZERO;
         let style = cc.egui_ctx.style().as_ref().clone();
         let s = butts.scale;
         let fg = Color32::from_rgb(butts.fg[0], butts.fg[1], butts.fg[2]);
@@ -171,11 +164,7 @@ impl ButtBox {
             ..style
         });
 
-        Self {
-            butts,
-            sel: 0,
-            psel: 0,
-        }
+        Self { butts, sel: 0, psel: 0 }
     }
 
     fn right(&mut self) {
@@ -200,13 +189,13 @@ impl ButtBox {
             self.sel -= self.butts.wrap
         };
     }
-    fn run(&mut self, n: usize, frame: &mut eframe::Frame) {
+    fn run(&mut self, n: usize, ctx: &Context) {
         if !self.butts.commands[n].1.get_program().is_empty() {
-            self.butts.commands[n].1.spawn().expect(&format!(
-                "Command {} failed",
-                self.butts.commands[n].1.get_program().to_string_lossy(),
-            ));
+            self.butts.commands[n]
+                .1
+                .spawn()
+                .expect(&format!("Command {} failed", self.butts.commands[n].1.get_program().to_string_lossy(),));
         }
-        frame.close();
+        ctx.send_viewport_cmd(ViewportCommand::Close)
     }
 } // }}}

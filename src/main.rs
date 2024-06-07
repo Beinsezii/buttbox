@@ -1,4 +1,4 @@
-use clap::Parser;
+use clap::{ArgAction, Parser};
 use colcon::Space;
 use serde::Deserialize;
 use std::{env, path::PathBuf, process::Command};
@@ -35,8 +35,11 @@ struct ButtSer {
 }
 
 #[derive(Parser)]
-#[command(author, version, about, long_about = None)]
+#[command(author, version, about, long_about = None, disable_help_flag = true)]
 struct ButtClap {
+    /// Show this help
+    #[arg(short='?', long, action=ArgAction::Help)]
+    help: bool,
     /// TOML file to read from
     file: PathBuf,
     /// Override foreground color
@@ -85,10 +88,8 @@ fn main() {
     // {{{
     let buttclap = ButtClap::parse();
 
-    let buttser: ButtSer = toml::de::from_str(
-        &std::fs::read_to_string(&buttclap.file).expect("Could not open TOML file!"),
-    )
-    .expect("Invalid/malformed TOML!");
+    let buttser: ButtSer =
+        toml::de::from_str(&std::fs::read_to_string(&buttclap.file).expect("Could not open TOML file!")).expect("Invalid/malformed TOML!");
 
     let commands: Vec<(String, Command)> = buttser
         .commands
@@ -131,29 +132,17 @@ fn main() {
                 .unwrap_or([0, 0, 0]),
         ),
 
-        opacity: buttclap
-            .opacity
-            .unwrap_or(buttser.opacity.unwrap_or(1.0))
-            .min(1.0)
-            .max(0.0),
+        opacity: buttclap.opacity.unwrap_or(buttser.opacity.unwrap_or(1.0)).min(1.0).max(0.0),
 
-        font_size: buttclap
-            .font_size
-            .unwrap_or(buttser.font_size.unwrap_or(12.0)),
+        font_size: buttclap.font_size.unwrap_or(buttser.font_size.unwrap_or(12.0)),
 
         wrap,
 
-        butt_width: buttclap
-            .butt_width
-            .unwrap_or(buttser.butt_width.unwrap_or(100.0)),
+        butt_width: buttclap.butt_width.unwrap_or(buttser.butt_width.unwrap_or(100.0)),
 
-        butt_height: buttclap
-            .butt_height
-            .unwrap_or(buttser.butt_height.unwrap_or(100.0)),
+        butt_height: buttclap.butt_height.unwrap_or(buttser.butt_height.unwrap_or(100.0)),
 
-        butt_stroke: buttclap
-            .butt_stroke
-            .unwrap_or(buttser.butt_stroke.unwrap_or(2.0)),
+        butt_stroke: buttclap.butt_stroke.unwrap_or(buttser.butt_stroke.unwrap_or(2.0)),
 
         scale: buttclap.scale.unwrap_or(scale_factor()),
     };
@@ -162,18 +151,17 @@ fn main() {
     let h = (buttsets.butt_height + buttsets.butt_stroke) * buttsets.scale;
 
     let native_options = eframe::NativeOptions {
-        always_on_top: true,
-        centered: true,
-        decorated: false,
-        resizable: false,
-        transparent: if buttsets.opacity < 1.0 { true } else { false },
-        initial_window_size: Some(
-            (
+        viewport: eframe::egui::ViewportBuilder::default()
+            .with_resizable(false)
+            .with_active(true)
+            .with_transparent(if buttsets.opacity < 1.0 { true } else { false })
+            .with_window_level(eframe::egui::WindowLevel::AlwaysOnTop)
+            .with_decorations(false)
+            .with_inner_size((
                 buttsets.wrap.min(buttsets.commands.len()) as f32 * w,
                 (buttsets.commands.len() as f32 / buttsets.wrap as f32).ceil() * h,
-            )
-                .into(),
-        ),
+            )),
+        centered: true,
         ..Default::default()
     };
 
