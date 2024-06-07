@@ -39,7 +39,7 @@ struct ButtSer {
 struct ButtClap {
     /// Show this help
     #[arg(short='?', long, action=ArgAction::Help)]
-    help: bool,
+    help: (),
     /// TOML file to read from
     file: PathBuf,
     /// Override foreground color
