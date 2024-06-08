@@ -16,9 +16,19 @@ See the [example TOML](./demo.toml)
 
 <img src="./demo.png"/>
 
-### Compiling
-Have Rust 2021 installed, clone repo and just run `cargo build`.
-`build_bin.sh` will build in binaries in release mode for linux/windows, moving the binaries to ./bin/
+## Installation
+Manually compiled and tested binaries for Linux and Windows are provided on the [releases tab](https://github.com/Beinsezii/buttbox/releases)
+
+Additionally, stable release binaries are automatically compiled and uploaded for Linux, Windows, and MacOS with the [Build Latest Release Tag Action](https://github.com/Beinsezii/buttbox/actions/workflows/build_release_tag.yml)
+while the latest unstable binaries are can be found in the [Build Master Release Action](https://github.com/Beinsezii/buttbox/actions/workflows/build_release_master.yml)
+
+Just pick the most recent (or otherwise) build of your choosing and download the artifact for your system. It'll arrive in a .zip file which you should be able to just unpack and run anywhere.
+
+If you already have [Rust installed](https://rustup.rs/), you can build the latest release with
+
+`cargo install --git https://github.com/Beinsezii/buttbox.git --tag 0.2.1`
+
+You may omit the `--tag` flag if you follow the rebel path and want the latest possibly unstable build.
 
 ## F.A.Q.
 Question|Answer
