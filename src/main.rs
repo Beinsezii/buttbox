@@ -118,19 +118,11 @@ fn main() {
     let buttsets = ButtSets {
         commands,
 
-        fg: buttclap.fg.unwrap_or(
-            buttser
-                .fg
-                .map(|s| colcon::hex_to_irgb(&s).expect("Invalid foreground hex!"))
-                .unwrap_or([255, 255, 255]),
-        ),
+        fg: buttclap
+            .fg
+            .unwrap_or(buttser.fg.map(|s| col_parse(&s).unwrap()).unwrap_or([255, 255, 255])),
 
-        bg: buttclap.bg.unwrap_or(
-            buttser
-                .bg
-                .map(|s| colcon::hex_to_irgb(&s).expect("Invalid foreground hex!"))
-                .unwrap_or([0, 0, 0]),
-        ),
+        bg: buttclap.bg.unwrap_or(buttser.bg.map(|s| col_parse(&s).unwrap()).unwrap_or([0, 0, 0])),
 
         opacity: buttclap.opacity.unwrap_or(buttser.opacity.unwrap_or(1.0)).min(1.0).max(0.0),
 
