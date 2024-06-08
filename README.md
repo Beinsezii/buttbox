@@ -1,4 +1,4 @@
-# ButtBox 0.2.0
+# ButtBox 0.2.1
 Easily create a box of buttons to do things!
 
 ## Features
